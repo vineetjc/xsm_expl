@@ -2,21 +2,21 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
-	
+
 	#define YYSTYPE tnode*
-	
+
 	#include "t2.h"
 	#include "t2.c"
 	int yylex(void);
 	int yyerror(char const *);
 %}
-	
+
 %token BEG ID READ WRITE DO WHILE IF THEN ELSE ENDIF ENDWHILE
 %token NUM PLUS MINUS MUL DIV END NTEQ CONDEQ BREAK CONTINUE REPEAT UNTIL
 %right EQ
 %left PLUS MINUS LT GT LE GE NTEQ CONDEQ
 %left MUL DIV
-	
+
 %%
 	Program : BEG Slist END {$$ = $2;
 				int p = codeGen($2);
@@ -52,11 +52,11 @@
 				strcpy(temp, "=");
 				$$ = createTree(0,0,temp,NODE_ASSGN,$1,NULL,$3);}
 			;
-	
+
 	IfStmt : IF'('expr')' THEN Slist ELSE Slist ENDIF';' {$$ = createTree(0,0,NULL,NODE_IF,$3,$6,$8);}
 			| 	IF'('expr')' THEN Slist ENDIF';' {$$ = createTree(0,0,NULL,NODE_IF,$3,$6,NULL);}
 			;
-	
+
 	WhileStmt : WHILE'('expr')' DO Slist ENDWHILE';' {$$ = createTree(0,0,NULL,NODE_WHILE,$3,NULL,$6);}
 			;
 
@@ -66,7 +66,7 @@
 	ContinueStmt : CONTINUE';' {$$ = createTree(0,0,NULL,NODE_CONTINUE,NULL,NULL,NULL);}
 			;
 
-	RepeatUntilStmt : REPEAT Slist UNTIL expr';' {$$ = createTree(0,0,NULL,NODE_REPUNTIL,$2,NULL,$4);} 								
+	RepeatUntilStmt : REPEAT Slist UNTIL expr';' {$$ = createTree(0,0,NULL,NODE_REPUNTIL,$2,NULL,$4);}
 			;
 
 	DoWhileStmt : DO Slist WHILE'('expr')'';' {$$ = createTree(0,0,NULL,NODE_DOWHILE,$2,NULL,$5);}
@@ -75,47 +75,47 @@
 	expr : expr PLUS expr {char *temp = (char *)malloc(sizeof(char));
 				strcpy(temp, "+");
 				$$ = createTree(0,inttype,temp,NODE_EX,$1,NULL,$3);}
-		
+
 		| expr MINUS expr {char *temp = (char *)malloc(sizeof(char));
 				strcpy(temp, "-");
 				$$ = createTree(0,inttype,temp,NODE_EX,$1,NULL,$3);}
-		
+
 		| expr MUL expr {char *temp = (char *)malloc(sizeof(char));
 				strcpy(temp, "*");
 				$$ = createTree(0,inttype,temp,NODE_EX,$1,NULL,$3);}
-		
+
 		| expr DIV expr {char *temp = (char *)malloc(sizeof(char));
 				strcpy(temp, "/");
 				$$ = createTree(0,inttype,temp,NODE_EX,$1,NULL,$3);}
-		
+
 		| expr LT expr {char *temp = (char *)malloc(sizeof(char));
 				strcpy(temp, "<");
 				$$ = createTree(0,booltype,temp,NODE_EX,$1,NULL,$3);}
-		
+
 		| expr GT expr {char *temp = (char *)malloc(sizeof(char));
 				strcpy(temp, ">");
 				$$ = createTree(0,booltype,temp,NODE_EX,$1,NULL,$3);}
-		
+
 		| expr LE expr {char *temp = (char *)malloc(2*sizeof(char));
 				strcpy(temp, "<=");
 				$$ = createTree(0,booltype,temp,NODE_EX,$1,NULL,$3);}
-		
+
 		| expr GE expr {char *temp = (char *)malloc(2*sizeof(char));
 				strcpy(temp, ">=");
 				$$ = createTree(0,booltype,temp,NODE_EX,$1,NULL,$3);}
-		
+
 		| expr NTEQ expr {char *temp = (char *)malloc(2*sizeof(char));
 				strcpy(temp, "!=");
 				$$ = createTree(0,booltype,temp,NODE_EX,$1,NULL,$3);}
-		
+
 		| expr CONDEQ expr {char *temp = (char *)malloc(2*sizeof(char));
 				strcpy(temp, "==");
-				$$ = createTree(0,booltype,temp,NODE_EX,$1,NULL,$3);}								
+				$$ = createTree(0,booltype,temp,NODE_EX,$1,NULL,$3);}
 		| '(' expr ')' {$$ = $2;}
 		| NUM {$$ = $1;}
 		| ID {$$ = $1;}
 		;
-	
+
 %%
 
 int yyerror(char const *s)

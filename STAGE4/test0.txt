@@ -1,0 +1,9 @@
+decl
+int x[10], n, a[10], b;
+enddecl
+begin
+read(n);
+b=1;
+a[b] = 5;
+write(n);
+end

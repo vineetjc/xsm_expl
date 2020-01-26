@@ -22,13 +22,13 @@ int getAddress(struct tnode **headref, char *labelval)
 {
     struct tnode *temp = *headref;
     printf("%s\n", labelval);
-    printf("Hey\n");
+     
     int res = -1;
     while((temp != NULL) && (strcmp(temp->label, labelval) != 0))
     {
         temp = temp->next;
     }
-    printf("Hey2\n");
+     
     if(temp)
     {
         if(strcmp(temp->label, labelval) == 0)

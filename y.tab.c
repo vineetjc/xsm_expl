@@ -1194,7 +1194,7 @@ yyreduce:
     {
         case 3:
 #line 19 "hello.y" /* yacc.c:1646  */
-    { printf("Hello World\n");   }
+    { //ello World\n");   }
 #line 1199 "y.tab.c" /* yacc.c:1646  */
     break;
 

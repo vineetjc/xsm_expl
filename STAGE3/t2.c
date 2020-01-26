@@ -61,7 +61,7 @@ struct tnode* createTree(int val,int type,char* varname,int nodetype,struct tnod
 	}
     return temp;
 }
-	
+
 /*int evaluate(struct tnode *t){
 	if(t->op == NULL)
 	{
@@ -204,20 +204,20 @@ reg_index codeGen(struct tnode *t)
 					freeReg();
 					return p;
 					break;
-					
+
 		case NODE_CONSTANT : 	//printf("Switchconst\n");
 					p = getReg();
 					fprintf(xsm_file, "MOV R%d, %d\n", p, t->val);
 					return p;
 					break;
-		
+
 		case NODE_VAR :		//printf("Switchvariable\n");
 					p = getReg();
 					add = 4096 + (*(t->varname)) - 'a';
 					fprintf(xsm_file, "MOV R%d, [%d]\n", p, add);
 					return p;
-					break;			
-		
+					break;
+
 		case NODE_WRITE : 	//printf("Switchwrite\n");
 					p = getReg();
 					q = codeGen(t->left);
@@ -227,7 +227,7 @@ reg_index codeGen(struct tnode *t)
 					freeReg();
 					return p;
 					break;
-		
+
 		case NODE_READ : 	//printf("Switchread\n");
 					p = getReg();
 					add = 4096 + *(t->left->varname) - 'a';
@@ -236,14 +236,14 @@ reg_index codeGen(struct tnode *t)
 					restore_reg(p);
 					return p;
 					break;
-		
+
 		case NODE_ASSGN :	//printf("Switchassgn\n");
 					add = 4096 + *(t->left->varname) - 'a';
 					q = codeGen(t->right);
 					fprintf(xsm_file, "MOV [%d], R%d\n", add, q);
 					return q;
 					break;
-		
+
 		case NODE_EX :	//printf("Switchexpr\n");
 					p = codeGen(t->left);
 					q = codeGen(t->right);
@@ -278,13 +278,13 @@ reg_index codeGen(struct tnode *t)
 							case '>' : 	fprintf(xsm_file, "GT R%d, R%d\n", p, q);
 									break;
 							case '<' : 	fprintf(xsm_file, "LT R%d, R%d\n", p, q);
-									break;					 		 		 	
+									break;
 						}
-					}	
+					}
 					freeReg();
 					return p;
 					break;
-		
+
 		case NODE_WHILE : l1 = getLabel();
 					l2 = getLabel();
 					push(whileStack, l1);
@@ -297,9 +297,9 @@ reg_index codeGen(struct tnode *t)
 					fprintf(xsm_file, "L%d:\n", l2);
 					pop(whileStack);
 					pop(whileStack);
-					return q; 
+					return q;
 					break;
-		
+
 		case NODE_IF : l1 = getLabel();
 					p = codeGen(t->left);
 					fprintf(xsm_file, "JZ R%d, L%d\n", p, l1);
@@ -308,31 +308,31 @@ reg_index codeGen(struct tnode *t)
 					{
 						l2 = getLabel();
 						fprintf(xsm_file, "JMP L%d\n", l2);
-					}	
+					}
 					fprintf(xsm_file, "L%d:\n", l1);
 					if(t->right)
 					{
 						q = codeGen(t->right);
 						fprintf(xsm_file, "L%d:\n", l2);
 					}
-					return q;		
+					return q;
 					break;
 
-		case NODE_BREAK : 
+		case NODE_BREAK :
 					if(top != -1)
 					{
 						l1 = whileStack[top];
 						fprintf(xsm_file, "JMP L%d\n", l1);
-					}	
+					}
 					return 1;
 					break;
 
-		case NODE_CONTINUE : 
+		case NODE_CONTINUE :
 					if(top != -1)
 					{
 						l2 = whileStack[top-1];
 						fprintf(xsm_file, "JMP L%d\n", l2);
-					}	
+					}
 					return 1;
 					break;
 
@@ -350,7 +350,7 @@ reg_index codeGen(struct tnode *t)
 					fprintf(xsm_file, "L%d:\n", l3);
 					break;
 
-		case NODE_DOWHILE : 
+		case NODE_DOWHILE :
 					l1 = getLabel();
 					l2 = getLabel();
 					l3 = getLabel();
@@ -362,8 +362,8 @@ reg_index codeGen(struct tnode *t)
 					q = codeGen(t->right);
 					fprintf(xsm_file, "JNZ R%d, L%d\n", q, l1);
 					fprintf(xsm_file, "L%d:\n", l3);
-					break;												
-	}				
+					break;
+	}
 }
 
 /*int codeGen(struct tnode *t, FILE *target_file)
@@ -402,11 +402,11 @@ reg_index codeGen(struct tnode *t)
 			freeReg();
 			return i;
 		}
-	}	
+	}
 }*/
 
 void tnode_print(struct tnode *t)
-{  
+{
 	printf("\n[");
 	printf("val %d\n",t->val);
 	printf("type %d\n",t->type);
@@ -434,10 +434,10 @@ void tnode_print(struct tnode *t)
 	    	case 7:
 	    		printf("WRITE\n");
 	    		break;
-			case 8 : 
+			case 8 :
 				printf("IF\n");
 				break;
-			case 9 : 
+			case 9 :
 				printf("WHILE\n");
 				break;
 			case 10 :
@@ -451,14 +451,14 @@ void tnode_print(struct tnode *t)
 				break;
 			case 13 :
 				printf("DO-WHILE\n");
-				break;									
+				break;
 	}
-  
+
   	if(t->varname!=NULL)
   		printf("varname %c\n",*(t->varname));
  	printf("]\n");
 }
-// 
+//
 void inorder(struct tnode *t)
 { //printf("inside inorder");
 	if(t==NULL)
@@ -471,7 +471,7 @@ void inorder(struct tnode *t)
 
 void print_header()
 {
-	fprintf(xsm_file, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",0,2056,0,0,0,0,0,0); 
+	fprintf(xsm_file, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",0,2056,0,0,0,0,0,0);
 	fprintf(xsm_file, "BRKP\n");
 	fprintf(xsm_file, "MOV SP, 4121\n");
 	return;
@@ -485,7 +485,7 @@ void store_answer()
 	backup_reg(p);
 	xos_call("Exit", 0, 0, p);
 	restore_reg(p);
-	freeReg();  
+	freeReg();
 	return;
 }
 
@@ -500,7 +500,7 @@ int evaluate(struct tnode *t)
 				printf("%c value is : %d\n", *(t->varname), regarr[temp]);
 				return regarr[temp];
 				break;
-		case NODE_READ : temp = *(t->left->varname) - 'a'; 
+		case NODE_READ : temp = *(t->left->varname) - 'a';
 				printf("Gonna read now.\n");
 				fscanf(infile, "%d\n", &regarr[temp]);
 				printf("Value Read ; %d\n", regarr[temp]);
@@ -519,8 +519,8 @@ int evaluate(struct tnode *t)
 				rval = evaluate(t->right);
 				if(lval <= rval)
 					return 1;
-				else 
-					return 0;	
+				else
+					return 0;
 			}
 			else if(strcmp(t->varname, ">=") == 0)
 			{
@@ -528,8 +528,8 @@ int evaluate(struct tnode *t)
 				rval = evaluate(t->right);
 				if(lval >= rval)
 					return 1;
-				else 
-					return 0;	
+				else
+					return 0;
 			}
 			else if(strcmp(t->varname, "!=") == 0)
 			{
@@ -537,8 +537,8 @@ int evaluate(struct tnode *t)
 				rval = evaluate(t->right);
 				if(lval != rval)
 					return 1;
-				else 
-					return 0;	
+				else
+					return 0;
 			}
 			else if(strcmp(t->varname, "==") == 0)
 			{
@@ -546,9 +546,9 @@ int evaluate(struct tnode *t)
 				rval = evaluate(t->right);
 				if(lval == rval)
 					return 1;
-				else 
-					return 0;	
-			}  
+				else
+					return 0;
+			}
 			switch(*(t->varname))
 			{
 				case '+' : return evaluate(t->left) + evaluate(t->right);
@@ -564,15 +564,15 @@ int evaluate(struct tnode *t)
 						if(lval < rval)
 							return 1;
 						else
-							return 0;	
+							return 0;
 						break;
 				case '>' : lval = evaluate(t->left);
 						rval = evaluate(t->right);
 						if(lval > rval)
 							return 1;
 						else
-							return 0;	
-						break;										
+							return 0;
+						break;
 			}
 			break;
 		case NODE_ASSGN : temp = *(t->left->varname) - 'a';
@@ -600,12 +600,12 @@ int evaluate(struct tnode *t)
 					{
 						rval = evaluate(t->right);
 						return rval;
-					}	
+					}
 				}
 				break;
 		case NODE_WHILE :
 				lval = evaluate(t->left);
-				printf("lval = %d\n", lval); 
+				printf("lval = %d\n", lval);
 				while(lval == 1)
 				{
 					rval = evaluate(t->right);
@@ -614,9 +614,9 @@ int evaluate(struct tnode *t)
 				}
 				return rval;
 				break;
-		case NODE_BREAK : 
+		case NODE_BREAK :
 				break;
-		case NODE_CONTINUE : 
+		case NODE_CONTINUE :
 				break;
 		case NODE_REPUNTIL :
 				lval = evaluate(t->left);
@@ -639,6 +639,6 @@ int evaluate(struct tnode *t)
 					rval = evaluate(t->right);
 					printf("rval = %d\n", rval);
 				}
-				break;									
+				break;
 	}
 }

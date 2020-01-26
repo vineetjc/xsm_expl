@@ -16,7 +16,7 @@ program:
         ;
 
 hi:     
-        HI     { printf("Hello World\n");   }
+        HI     { //ello World\n");   }
         ;
 bye:    
         BYE    { printf("Bye World\n"); exit(0); }

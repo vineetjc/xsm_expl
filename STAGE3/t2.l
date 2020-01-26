@@ -5,9 +5,9 @@
 	#include "y.tab.h"
 	int number;
 %}
-	
+
 %%
-	
+
 [0-9]+ {printf("%s\n", yytext); number = atoi(yytext); yylval = createTree(number,inttype,NULL,NODE_CONSTANT,NULL,NULL,NULL); return NUM;}
 "endif" {printf("%s\n", yytext);return ENDIF;}
 "endwhile" {printf("%s\n", yytext);return ENDWHILE;}
@@ -41,10 +41,10 @@
 [\n] {}
 [()] {return *yytext;}
 . {yyerror("unknown character\n"); exit(1);}
-	
+
 %%
-	
-int yywrap(void) 
+
+int yywrap(void)
 {
 	return 1;
 }
